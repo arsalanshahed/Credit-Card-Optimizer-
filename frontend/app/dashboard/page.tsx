@@ -58,7 +58,7 @@ export default function DashboardPage() {
                 </div>
 
                 <h3 className="text-lg font-semibold text-white mb-4">
-                  {simulation.selected_card || 'No card selected'}
+                  {simulation.recommendations[0]?.card_name || 'No card selected'}
                 </h3>
 
                 <div className="space-y-2 mb-4">
