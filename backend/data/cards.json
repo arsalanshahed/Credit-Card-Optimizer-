@@ -1,0 +1,30 @@
+{
+  "cards": [
+    {
+      "name": "Discover It Cash Back",
+      "base_reward": 0.01,
+      "category_rewards": {
+        "Dining": 0.03,
+        "Groceries": 0.05,
+        "Online Shopping": 0.05
+      }
+    },
+    {
+      "name": "Blue Cash Everyday",
+      "base_reward": 0.01,
+      "category_rewards": {
+        "Groceries": 0.03,
+        "Gas": 0.03
+      }
+    },
+    {
+      "name": "Chase Freedom Unlimited",
+      "base_reward": 0.015,
+      "category_rewards": {
+        "Dining": 0.03,
+        "Drugstores": 0.03
+      }
+    }
+  ]
+}
+

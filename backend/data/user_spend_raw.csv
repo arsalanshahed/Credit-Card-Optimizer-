@@ -1,0 +1,12 @@
+date,merchant,category,amount
+2025-01-01,Chipotle,Dining,14.50
+2025-01-03,Walmart,Groceries,82.10
+2025-01-05,Amazon,Online Shopping,26.99
+2025-01-07,Costco,Gas,42.33
+2025-01-08,Target,Groceries,55.27
+2025-01-10,Walgreens,Drugstores,18.44
+2025-01-12,Starbucks,Dining,5.75
+2025-01-15,Shell,Gas,35.20
+2025-01-18,Whole Foods,Groceries,92.50
+2025-01-20,McDonald's,Dining,8.99
+

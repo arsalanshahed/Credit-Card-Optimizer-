@@ -1,0 +1,11 @@
+card_name,issuer,base_reward,category_rewards,annual_fee,signup_bonus,signup_bonus_spend_requirement,category_caps
+Discover It Cash Back,Discover,0.01,"{""Dining"": 0.03, ""Groceries"": 0.05, ""Online Shopping"": 0.05}",0,0,0,"{""Groceries"": 1500, ""Online Shopping"": 1500}"
+Blue Cash Everyday,American Express,0.01,"{""Groceries"": 0.03, ""Gas"": 0.03}",0,200,1000,"{""Groceries"": 6000}"
+Chase Freedom Unlimited,Chase,0.015,"{""Dining"": 0.03, ""Drugstores"": 0.03}",0,200,500,"{}"
+Citi Double Cash,Citi,0.02,"{}",0,200,1500,"{}"
+Capital One Savor One,Capital One,0.01,"{""Dining"": 0.03, ""Groceries"": 0.03, ""Entertainment"": 0.03}",0,200,500,"{}"
+Wells Fargo Active Cash,Wells Fargo,0.02,"{}",0,200,1000,"{}"
+Bank of America Customized Cash,Bank of America,0.01,"{""Gas"": 0.03, ""Online Shopping"": 0.03, ""Dining"": 0.03, ""Drugstores"": 0.03, ""Home Improvement"": 0.03}",0,200,1000,"{""Gas"": 2500, ""Online Shopping"": 2500, ""Dining"": 2500, ""Drugstores"": 2500, ""Home Improvement"": 2500}"
+US Bank Cash+,US Bank,0.01,"{""Gas"": 0.05, ""Groceries"": 0.05, ""Dining"": 0.05}",0,200,1000,"{""Gas"": 2000, ""Groceries"": 2000, ""Dining"": 2000}"
+
+
