@@ -60,9 +60,21 @@ app = FastAPI(
 )
 
 # CORS middleware
+# Allow all origins in production, specific origins in development
+allowed_origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://*.vercel.app",  # Vercel preview deployments
+]
+
+# In production, allow all origins (you can restrict this later)
+import os
+if os.getenv("ENVIRONMENT") != "development":
+    allowed_origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
