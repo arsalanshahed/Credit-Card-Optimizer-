@@ -1,11 +1,14 @@
 """
 FastAPI backend for credit card optimization.
+Unified deployment: serves both API and frontend static files.
 """
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import Response
+from fastapi.responses import Response, FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 import sys
+import os
 
 # Add shared types to path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -54,27 +57,15 @@ except ImportError:
         category_rewards: Dict[str, float]
 
 app = FastAPI(
-    title="Credit Card Optimizer API",
-    description="Real-time credit card recommendation engine",
+    title="Credit Card Optimizer",
+    description="Unified credit card recommendation engine with frontend",
     version="1.0.0"
 )
 
-# CORS middleware
-# Allow all origins in production, specific origins in development
-allowed_origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "https://*.vercel.app",  # Vercel preview deployments
-]
-
-# In production, allow all origins (you can restrict this later)
-import os
-if os.getenv("ENVIRONMENT") != "development":
-    allowed_origins = ["*"]
-
+# CORS middleware - minimal since everything is same-origin
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=["*"],  # Same origin in production, but allow for flexibility
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -87,19 +78,50 @@ app.include_router(optimizer_router)
 reward_optimizer = RewardOptimizer()
 ml_service = MLService()
 
+# Mount static files for frontend (must be before catch-all route)
+FRONTEND_DIST = Path(__file__).parent.parent / "frontend_dist"
+if FRONTEND_DIST.exists():
+    # Serve Next.js static assets
+    static_dir = FRONTEND_DIST / "_next" / "static"
+    if static_dir.exists():
+        app.mount("/_next/static", StaticFiles(directory=str(static_dir)), name="static")
+    
+    # Serve other static files
+    for static_path in ["images", "favicon.ico"]:
+        static_file = FRONTEND_DIST / static_path
+        if static_file.exists():
+            if static_file.is_file():
+                @app.get(f"/{static_path}")
+                def serve_static_file():
+                    return FileResponse(str(static_file))
+            else:
+                app.mount(f"/{static_path}", StaticFiles(directory=str(static_file)), name=static_path)
+
+
+@app.get("/health")
+def health_check():
+    """Health check endpoint for Railway."""
+    return {
+        "status": "healthy",
+        "service": "credit-card-optimizer",
+        "version": "1.0.0"
+    }
+
 
 @app.get("/")
 def root():
-    """API information."""
+    """Serve frontend index.html or API info."""
+    index_path = FRONTEND_DIST / "index.html"
+    if index_path.exists():
+        return FileResponse(str(index_path))
     return {
         "message": "Credit Card Optimizer API",
         "version": "1.0.0",
         "endpoints": {
-            "POST /recommend": "Get credit card recommendation",
-            "GET /cards": "List all available credit cards",
-            "GET /merchant-info/{merchant_name}": "Get merchant category and MCC info"
-        },
-        "model_loaded": ml_service.is_loaded()
+            "POST /api/optimizer/recommend": "Get credit card recommendation",
+            "GET /api/optimizer/cards": "List all available credit cards",
+            "GET /health": "Health check"
+        }
     }
 
 
@@ -168,7 +190,29 @@ def recommend(request: RecommendationRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# Catch-all route for frontend SPA routing (must be last)
+@app.get("/{full_path:path}")
+def serve_frontend(full_path: str):
+    """Serve frontend routes for SPA navigation."""
+    # Don't serve API routes
+    if full_path.startswith("api/") or full_path.startswith("_next/") or full_path in ["health", "favicon.ico"]:
+        raise HTTPException(status_code=404, detail="Not found")
+    
+    # Try to serve the requested file
+    requested_file = FRONTEND_DIST / full_path
+    if requested_file.exists() and requested_file.is_file():
+        return FileResponse(str(requested_file))
+    
+    # Fallback to index.html for SPA routes
+    index_path = FRONTEND_DIST / "index.html"
+    if index_path.exists():
+        return FileResponse(str(index_path))
+    
+    raise HTTPException(status_code=404, detail="Not found")
+
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
 

@@ -1,0 +1,46 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# Old deployment configs
+vercel.json
+render.yaml
+DEPLOYMENT.md
+DEPLOY_NOW.md
+DEPLOYMENT_STEPS.md
+VERCEL_FIX.md
+VERCEL_SETUP.md
+
+# Frontend
+frontend/node_modules
+frontend/.next
+frontend/out
+frontend/.env.local
+frontend/.env*.local
+
+# Backend
+backend/__pycache__
+backend/**/__pycache__
+backend/*.pyc
+backend/.env
+backend/.venv
+backend/venv
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.log
+npm-debug.log*
+
